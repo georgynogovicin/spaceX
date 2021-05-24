@@ -1,26 +1,55 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Filters from './Filters';
+import List from './List';
+import { useEffect, useState } from "react";
+import { ILaunch } from './types';
 
-function App() {
+export default function App() {
+
+  const [launches, setLaunches] = useState<ILaunch[]>([]);
+  const [siteNames, setSiteNames] = useState<string[]>([]);
+  const [rocketNames, setRocketNames] = useState<string[]>([]);
+
+  const getValues = (launches: ILaunch[]) => {
+    const sites = launches.reduce((acc: string[], launch: ILaunch) => {
+      !acc.some(item => item === launch.launch_site.site_name) && acc.push(launch.launch_site.site_name)
+      return acc;
+    }, [])
+
+    const rockets = launches.reduce((acc: string[], launch: ILaunch) => {
+      !acc.some(item => item === launch.rocket.rocket_name) && acc.push(launch.rocket.rocket_name)
+      return acc;
+    }, [])
+
+    return [sites, rockets];
+  };
+
+
+  useEffect(() => {
+    const getData = async () => {
+      const res = await fetch('https://api.spacexdata.com/v3/launches');
+      const launches = await res.json();
+      const [siteNames, rocketNames] = getValues(launches);
+      setLaunches(launches);
+      setSiteNames(siteNames);
+      setRocketNames(rocketNames);
+    }
+
+    getData()
+  }, [])
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="container">
+        <h1>Launches</h1>
+        <div className="row justify-content-start">
+          <Filters items={rocketNames} type={'Rocket'} />
+          <Filters items={siteNames} type={'Launch Site'} />
+        </div>
+        <div className='row mt-4 ml-4'>
+          {launches && <List launches={launches} />}
+        </div>
+      </div>
     </div>
   );
 }
-
-export default App;
