@@ -7,7 +7,7 @@ interface ListItemProps {
 
 const ListItem: FC<ListItemProps> = ({ launch }) => {
 
-    const { mission_name, details, links, launch_date_utc, flight_id } = launch;
+    const { mission_name, details, links, launch_date_utc, launch_site, rocket } = launch;
 
     const formatDate = (dateUTC: Date) => {
         const normalize = (num: number) => num.toString().length > 1 ? num : `0${num}`
@@ -17,7 +17,7 @@ const ListItem: FC<ListItemProps> = ({ launch }) => {
     }
 
     return (
-        <li key={flight_id} className="list-group-item border-0" style={{ maxWidth: "800px" }}>
+        <li className="list-group-item border-0" style={{ maxWidth: "800px" }}>
             <div className="card mb-3 p-4">
                 <div className="row g-0">
                     <div className="col-md-4">
@@ -34,6 +34,8 @@ const ListItem: FC<ListItemProps> = ({ launch }) => {
                             </p>
                         </div>
                         <div className="card-body">
+                            <p className="card-text">Rocket: <small className="text-muted">{rocket.rocket_name}</small></p>
+                            <p className="card-text">Site: <small className="text-muted">{launch_site.site_name}</small></p>
                             <p className="card-text">
                                 {details || 'Upcomming'}
                             </p>

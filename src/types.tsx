@@ -11,7 +11,6 @@ export interface ISite {
 }
 
 export interface ILaunch {
-    flight_id: string,
     launch_date_utc: Date,
     mission_name: string,
     rocket: IRocket,

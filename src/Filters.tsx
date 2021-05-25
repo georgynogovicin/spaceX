@@ -3,14 +3,20 @@ import { FC, useState } from 'react';
 interface FiltersProps {
     items: string[]
     type: string
+    onChange: (name: string) => void
 }
 
 
 
-const Filters: FC<FiltersProps> = ({ items, type }) => {
+const Filters: FC<FiltersProps> = ({ items, type, onChange }) => {
     const [isActive, setIsActive] = useState<boolean>(false);
+    const [mainValue, setMainValue] = useState<string>('All');
 
-
+    const onChangeHandler = (name: string) => {
+        setMainValue(name)
+        setIsActive(false)
+        onChange(name)
+    }
 
 
     const listItems = items.map(item => {
@@ -18,7 +24,7 @@ const Filters: FC<FiltersProps> = ({ items, type }) => {
             <li key={item} className="dropdown-item">
                 <div className="form-check">
                     <label className="form-check-label">
-                        <input className="form-check-input" type="radio" name="radio" />
+                        <input checked={mainValue === item} className="form-check-input" type="radio" name={item} onChange={() => onChangeHandler(item)} />
                         {item}
                     </label>
                 </div>
@@ -35,13 +41,13 @@ const Filters: FC<FiltersProps> = ({ items, type }) => {
                     type="button"
                     onClick={() => setIsActive(!isActive)}
                 >
-                    All
+                    {mainValue}
                 </button>
                 <ul className={`dropdown-menu ${isActive && `show`}`}>
                     <li key='all' className="dropdown-item">
                         <div className="form-check">
                             <label className="form-check-label">
-                                <input className="form-check-input" type="radio" name="radio" />
+                                <input checked={mainValue === 'All'} className="form-check-input" type="radio" name={'All'} onChange={() => onChangeHandler('All')} />
                                 All
                             </label>
                         </div>

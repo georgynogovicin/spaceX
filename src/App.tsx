@@ -9,6 +9,9 @@ export default function App() {
   const [siteNames, setSiteNames] = useState<string[]>([]);
   const [rocketNames, setRocketNames] = useState<string[]>([]);
 
+  const [rocketsFilterValue, setRocketsFilterValue] = useState<string>('All');
+  const [sitesFilterValue, setSitesFilterValue] = useState<string>('All');
+
   const getValues = (launches: ILaunch[]) => {
     const sites = launches.reduce((acc: string[], launch: ILaunch) => {
       !acc.some(item => item === launch.launch_site.site_name) && acc.push(launch.launch_site.site_name)
@@ -43,11 +46,11 @@ export default function App() {
       <div className="container">
         <h1>Launches</h1>
         <div className="row justify-content-start">
-          <Filters items={rocketNames} type={'Rocket'} />
-          <Filters items={siteNames} type={'Launch Site'} />
+          <Filters items={rocketNames} type={'Rocket'} onChange={setRocketsFilterValue} />
+          <Filters items={siteNames} type={'Launch Site'} onChange={setSitesFilterValue} />
         </div>
         <div className='row mt-4 ml-4'>
-          {launches && <List launches={launches} />}
+          {launches && <List launches={launches} rocketsFilterValue={rocketsFilterValue} sitesFilterValue={sitesFilterValue} />}
         </div>
       </div>
     </div>
